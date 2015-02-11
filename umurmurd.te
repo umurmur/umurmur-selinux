@@ -1,0 +1,38 @@
+policy_module(umurmurd, 1.0)
+
+gen_require(`
+        type bin_t;
+        type etc_t;
+        type devlog_t;
+        type syslogd_t;
+        type node_t;
+        type unreserved_port_t;
+')
+
+type umurmurd_t;
+type umurmurd_exec_t;
+type umurmurd_var_run_t;
+
+init_daemon_domain(umurmurd_t, umurmurd_exec_t)
+application_domain(umurmurd_t, umurmurd_exec_t)
+miscfiles_read_localization(umurmurd_t)
+
+files_pid_file(umurmurd_var_run_t)
+files_search_pids(umurmurd_t)
+files_pid_filetrans(umurmurd_t, umurmurd_var_run_t, file)
+
+allow umurmurd_t bin_t:dir                    { search getattr };
+allow umurmurd_t etc_t:file                   { read ioctl open getattr };
+allow umurmurd_t umurmurd_var_run_t:file      { manage_file_perms };
+
+allow umurmurd_t devlog_t:sock_file           { write };
+allow umurmurd_t syslogd_t:unix_dgram_socket  { sendto };
+
+allow umurmurd_t self:unix_dgram_socket       { write create connect };
+allow umurmurd_t self:tcp_socket              { bind create setopt listen read write accept };
+allow umurmurd_t self:udp_socket              { bind create setopt read write };
+allow umurmurd_t node_t:tcp_socket            { node_bind };
+allow umurmurd_t node_t:udp_socket            { node_bind };
+allow umurmurd_t unreserved_port_t:tcp_socket { name_bind };
+allow umurmurd_t unreserved_port_t:udp_socket { name_bind };
+

@@ -1,0 +1,4 @@
+/usr/local/bin/umurmurd -- gen_context(system_u:object_r:umurmurd_exec_t,s0)
+/usr/local/etc/umurmur     gen_context(system_u:object_r:etc_t,s0)
+/usr/local/etc/umurmur/*   gen_context(system_u:object_r:etc_t,s0)
+
